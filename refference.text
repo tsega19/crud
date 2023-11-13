@@ -1,0 +1,6 @@
+client secreate: EgsEwXGrGxl05YeqwGXW0GN3RELzxwGn
+"issuer": "http://localhost:8082/realms/appointments",
+"token_endpoint": "http://localhost:8082/realms/appointments/protocol/openid-connect/token",
+realme Id appointment_auth
+name: appointment_auth
+creditial: lHEDH0ISb4hqj1dcx3IP5iTxGgCtj3Oc
