@@ -1,0 +1,22 @@
+<!-- appointment.component.html -->
+<h2>Appointments</h2>
+<div *ngIf="appointments?.length === 0; else appointmentList">
+  <p>No appointments available.</p>
+</div>
+<ng-template #appointmentList>
+  <div *ngFor="let appointment of appointments">
+    <div>
+      <strong>ID:</strong> {{ appointment.id }}
+    </div>
+    <div>
+      <strong>Reason:</strong> {{ appointment.reason }}
+    </div>
+    <div>
+      <strong>Phone Number:</strong> {{ appointment.phoneNumber }}
+    </div>
+    <div>
+      <strong>Insurance:</strong> {{ appointment.insurance }}
+    </div>
+    <hr />
+  </div>
+</ng-template>

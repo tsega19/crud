@@ -1,0 +1,11 @@
+<!-- home.component.html -->
+
+<div *ngIf="isLoggedIn">
+    <h2>Welcome to the Home Page</h2>
+    <app-appointment></app-appointment>
+    <button (click)="logout()">Logout</button>
+  </div>
+  <div *ngIf="!isLoggedIn">
+    <h2>Please log in to access the Home Page</h2>
+  </div>
+  
