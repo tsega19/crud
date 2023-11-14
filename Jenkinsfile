@@ -1,11 +1,16 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_REGISTRY = 'docker.io'  // Docker Hub
+        DOCKER_IMAGE_NAME = 'your-docker-username/your-spring-app'
+        DOCKER_IMAGE_TAG = 'latest'
+    }
+
     stages {
         stage('Checkout') {
             steps {
                 script {
-                    // Clone the Git repository
                     git 'https://github.com/tsega19/crud.git'
                 }
             }
@@ -14,18 +19,39 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Build and package the Spring Boot application using Gradle
                     sh './gradlew clean build'
                 }
             }
         }
 
-        stage('Deploy') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    // You can add deployment steps here if needed
-                    // For example, deploying to a server or container
-                    // You may need additional plugins for deployment steps
+                    sh "docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG ."
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    sh "docker push $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG"
+                }
+            }
+        }
+
+        stage('Deploy with Docker Compose') {
+            steps {
+                script {
+                    writeFile file: 'docker-compose.yml', text: """
+                        version: '3'
+                        services:
+                          app:
+                            image: $DOCKER_REGISTRY/$DOCKER_IMAGE_NAME:$DOCKER_IMAGE_TAG
+                            ports:
+                              - "8080:8080"
+                    """
+                    sh 'docker-compose up -d'
                 }
             }
         }
@@ -41,12 +67,10 @@ pipeline {
 
     post {
         success {
-            // Actions to perform if the pipeline is successful
             echo 'Build and deployment successful!'
         }
 
         failure {
-            // Actions to perform if the pipeline fails
             echo 'Build or deployment failed!'
         }
     }
